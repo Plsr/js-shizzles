@@ -1,7 +1,7 @@
 JS-Paint
 =====
 
-__A paintign programm coded with Javascript__
+__A painting programm coded with Javascript__
 
 Coded after this [tutorial](http://dev.opera.com/articles/view/html5-canvas-painting/)  
 
