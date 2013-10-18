@@ -32,33 +32,64 @@ window.addEventListener('load', function () {
       return;
     }
 
-    // Attach the mousemove event handler.
-    canvas.addEventListener('mousemove', ev_mousemove, false);
+    //Pencil tool instance
+    tool = new tool_pencil();
+
+    // Attach the mousemove, mousedown and mouseup event handler.
+    canvas.addEventListener('mousemove', ev_canvas, false);
+    canvas.addEventListener('mousedown', ev_canvas, false);
+    canvas.addEventListener('mouseup', ev_canvas, false);
+  }
+
+  //This painting tool works like a drawing pancil which tracks the 
+  //mouse movements
+  function tool_pencil () {
+    var tool = this;
+    this.started = false;
+
+      //This is called when you start holding down the mouse button.
+      //This starts the pencil drawing.
+      this.mousedown = function (ev) {
+        context.beginPath();
+        context.moveTo(ev._x, ev._y);
+        tool.started = true;
+      };
+
+      //This function is called every time you move the mouse. Only draws 
+      //if tool.started is true, means when mouse button is held down
+      this.mousemove = function (ev) {
+        if (tool.started) {
+          context.lineTo(ev._x, ev._y);
+          context.stroke();
+        }
+      };
+
+      //This is called on button release.
+      this.mouseup = function (ev) {
+        if(tool.started){
+          tool.mousemove(ev);
+          tool.started = false;
+        }
+      };
   }
 
   // The mousemove event handler.
-  var started = false;
-  function ev_mousemove (ev) {
-    var x, y;
+  function ev_canvas (ev) {
 
-    // Get the mouse position relative to the canvas element.
+    // The general purpose event handler.
+    //Gets the mouse position relative to the canvas element.
     if (ev.layerX || ev.layerX == 0) { // Firefox
-      x = ev.layerX;
-      y = ev.layerY;
+      ev._x = ev.layerX;
+      ev._y = ev.layerY;
     } else if (ev.offsetX || ev.offsetX == 0) { // Opera
-      x = ev.offsetX;
-      y = ev.offsetY;
+      ev._x = ev.offsetX;
+      ev._y = ev.offsetY;
     }
 
-    // The event handler works like a drawing pencil which tracks the mouse 
-    // movements. We start drawing a path made up of lines.
-    if (!started) {
-      context.beginPath();
-      context.moveTo(x, y);
-      started = true;
-    } else {
-      context.lineTo(x, y);
-      context.stroke();
+    //Call the event handler of the function
+    var func = tool[ev.type];
+    if(func) {
+      func(ev);
     }
   }
 
