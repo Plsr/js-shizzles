@@ -33,7 +33,9 @@ monsterImage.src = "monster.png";
 var hero = {
 	speed: 256 // movement in pixels per second
 };
-var monster = {};
+var monster = {
+	speed: 128
+};
 var monstersCaught = 0;
 
 // Handle keyboard controls
@@ -47,12 +49,13 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
+// Set the Hero in the middle of the canvas
 var setHero = function () {
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
 }
 
-// Reset the game when the player catches a monster
+// Randomly place a monster
 var setMonster = function () {
 
 	// Throw the monster somewhere on the screen randomly
@@ -62,18 +65,20 @@ var setMonster = function () {
 
 // Update game objects
 var update = function (modifier) {
-	if (38 in keysDown) { // Player holding up
+	if (38 in keysDown && hero.y > 0) { // Player holding up
 		hero.y -= hero.speed * modifier;
 	}
-	if (40 in keysDown) { // Player holding down
+	if (40 in keysDown && hero.y < 440) { // Player holding down
 		hero.y += hero.speed * modifier;
 	}
-	if (37 in keysDown) { // Player holding left
+	if (37 in keysDown && hero.x > 0) { // Player holding left
 		hero.x -= hero.speed * modifier;
 	}
-	if (39 in keysDown) { // Player holding right
+	if (39 in keysDown && hero.x < canvas.width -40) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
+
+	
 
 	// Are they touching?
 	if (
@@ -119,6 +124,7 @@ var main = function () {
 
 	then = now;
 };
+
 
 // Let's play this game!
 setHero();
