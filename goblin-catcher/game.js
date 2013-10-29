@@ -1,9 +1,12 @@
 // Create the canvas
 var canvas = document.createElement("canvas");
+var debug = document.createElement("div")
 var ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
+document.body.appendChild(debug);
+
 
 // Background image
 var bgReady = false;
@@ -90,34 +93,45 @@ var update = function (modifier) {
 		&& monster.y <= (hero.y + 32)
 	) {
 		++monstersCaught;
+		newPosition = true;
 		setMonster();
 	}
 };
 
 var newPosition = true;
+var randomX = 0;
+var randomY = 0;
 var monsterMove = function(modifier) {
 	if(newPosition) {
 		newPosition = false;
-	
-		var randomX = Math.floor(Math.random() * canvas.width);
-		var randomY = Math.floor(Math.random() * canvas.height);
-	}
 
-		if(monster.x < randomX) {
-			monster.x -= monster.speed * modifier;
-		}
-		if(monster.x > randomX) {
+		
+
+		randomX = parseInt(Math.floor(Math.random() * (canvas.width - 32)));
+		randomY = parseInt(Math.floor(Math.random() * (canvas.height - 32)));
+		
+	}
+	
+
+		if(monster.x < randomX && monster.x > 0) {
 			monster.x += monster.speed * modifier;
 		}
-		if(monster.y < randomY) {
-			monster.y -= monster.speed * modifier;
+		if(monster.x > randomX && monster.x < canvas.width - 32) {
+			monster.x -= monster.speed * modifier;
 		}
-		if(monster.y > randomY) {
+		if(monster.y < randomY && monster.y > 0) {
 			monster.y += monster.speed * modifier;
 		}
-		if(monster.x == randomX && monster.y == randomY){
-			newPosition = true
+		if(monster.y > randomY && monster.y < canvas.height -32) {
+			monster.y -= monster.speed * modifier;
 		}
+		console.log("x: " + parseInt(monster.x) + " | " + "y: " + parseInt(monster.y));
+		if(parseInt(monster.y) == (randomY - 1)  && parseInt(monster.x) == (randomX - 1)){
+			newPosition = true;
+			console.log("x: " + parseInt(monster.x) + " | " + "y: " + parseInt(monster.y));
+		}
+
+		
 
 	
 
